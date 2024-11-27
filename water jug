@@ -1,0 +1,55 @@
+from collections import deque
+
+def is_solvable(a, b, c):
+    if c > a and c > b:
+        return False
+    return c % gcd(a, b) == 0
+
+def gcd(x, y):
+    while y:
+        x, y = y, x % y
+    return x
+
+def bfs_water_jug(a, b, target_jug1, target_jug2):
+    if not is_solvable(a, b, target_jug1) or not is_solvable(a, b, target_jug2):
+        return "No solution"
+
+    visited = set()
+    queue = deque()
+    queue.append((0, 0, []))
+    visited.add((0, 0))
+
+    while queue:
+        x, y, steps = queue.popleft()
+
+        if x == target_jug1 and y == target_jug2:
+            print(f"\nSolution found: {x} liters in Jug1, {y} liters in Jug2\n")
+            print("Steps performed:")
+            for step in steps:
+                print(step)
+            return f"Final State: Jug1: {x} liters, Jug2: {y} liters"
+
+        next_states = [
+            (a, y, steps + [f"Fill Jug1: ({a}, {y})"]),
+            (x, b, steps + [f"Fill Jug2: ({x}, {b})"]),
+            (0, y, steps + [f"Empty Jug1: (0, {y})"]),
+            (x, 0, steps + [f"Empty Jug2: ({x}, 0)"]),
+            (min(x + y, a), y - min(a - x, y), steps + [f"Pour Jug2 into Jug1: ({min(x + y, a)}, {y - min(a - x, y)})"]),
+            (x - min(b - y, x), min(x + y, b), steps + [f"Pour Jug1 into Jug2: ({x - min(b - y, x)}, {min(x + y, b)})"])
+        ]
+
+        for state in next_states:
+            if (state[0], state[1]) not in visited:
+                visited.add((state[0], state[1]))
+                queue.append(state)
+
+    return "No solution found"
+
+# Input reading and function call
+a = int(input("Enter capacity of Jug1: "))
+b = int(input("Enter capacity of Jug2: "))
+c = int(input("Enter target capacity for Jug1: "))
+d = int(input("Enter target capacity for Jug2: "))
+
+result = bfs_water_jug(a, b, c, d)
+print(result)
