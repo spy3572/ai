@@ -1,0 +1,26 @@
+adj = {}
+n = int(input("Number of edges: "))
+print("Enter edges:")
+for _ in range(n):
+    x, y = map(int, input().split())
+    adj.setdefault(x, []).append(y)
+    adj.setdefault(y, []).append(x)
+
+s = int(input("Start node: "))
+g = int(input("Goal node: "))
+
+def dfs(s, adj, path, g):
+    path.append(s)
+    if s == g:
+        return True
+    for neighbor in adj[s]:
+        if neighbor not in path:
+            if dfs(neighbor, adj, path, g):
+                return True
+    return False
+
+path = []
+if dfs(s, adj, path, g):
+    print("Path found:", path)
+else:
+    print("No path found.")
