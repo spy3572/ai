@@ -1,0 +1,37 @@
+adj = {}
+n = int(input("Number of Edges: "))
+print("Enter edges (format: node1 node2):")
+for _ in range(n):
+    x, y = map(int, input().split())
+    if x not in adj:
+        adj[x] = []
+    if y not in adj:
+        adj[y] = []
+    adj[x].append(y)
+    adj[y].append(x)
+
+s = int(input("Enter start node: "))
+g = int(input("Enter goal node: "))
+dl = int(input("Enter depth limit: "))
+
+path = []
+
+def dls(s, adj, path, g, dl):
+    path.append(s)
+    if s == g:
+        return True
+    if dl <= 0:
+        path.pop()  
+        return False
+    for neighbor in adj[s]:
+        if neighbor not in path:
+            if dls(neighbor, adj, path, g, dl - 1):
+                return True
+    path.pop()  
+    return False
+
+if dls(s, adj, path, g, dl):
+    print("Goal found.")
+    print("Path:", " -> ".join(map(str, path)))
+else:
+    print("Goal not found within depth limit.")
