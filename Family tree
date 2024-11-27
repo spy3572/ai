@@ -1,0 +1,44 @@
+from collections import defaultdict
+
+class FamilyTree:
+    def __init__(self, head):
+        self.family = defaultdict(list)
+        self.head = head
+        self.dead = set()
+
+    def birth(self, parent, child):
+        self.family[parent].append(child)
+
+    def death(self, name):
+        self.dead.add(name)
+
+    def inheritance(self):
+        order = []
+        self._dfs(self.head, order)
+        return order
+
+    def _dfs(self, person, order):
+        if person not in self.dead:
+            order.append(person)
+        for child in self.family[person]:
+            self._dfs(child, order)
+
+def main():
+    tree = FamilyTree(input("Enter family head: ").strip())
+    while True:
+        command = input("\nCommands:\n1. birth parent child\n2. death name\n3. get\n4. exit\nEnter: ").strip().lower()
+        if command.startswith("birth"):
+            _, parent, child = command.split()
+            tree.birth(parent, child)
+        elif command.startswith("death"):
+            _, name = command.split()
+            tree.death(name)
+        elif command == "get":
+            print("Inheritance:", tree.inheritance())
+        elif command == "exit":
+            break
+        else:
+            print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
