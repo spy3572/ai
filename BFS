@@ -1,0 +1,48 @@
+import heapq
+
+def best_first_search(graph, start, goal, heuristic):
+    queue = []
+    heapq.heappush(queue, (heuristic[start], start))
+    visited = set()
+    path = []
+    while queue:
+        _, current = heapq.heappop(queue)
+        path.append(current)
+        visited.add(current)
+
+        if current == goal:
+            return path
+
+        for neighbor in graph[current]:
+            if neighbor not in visited:
+                heapq.heappush(queue, (heuristic[neighbor], neighbor))
+    
+    return None  
+
+def main():
+    graph = {}
+    heuristic = {}
+    num_nodes = int(input("Enter the number of nodes: "))
+
+    print("Enter the nodes and their neighbors (format: node: neighbor1,neighbor2,...):")
+    for _ in range(num_nodes):
+        line = input().strip()
+        node, neighbors = line.split(":")
+        graph[node] = neighbors.split(",") if neighbors else []
+
+    print("Enter the heuristic values (format: node: value):")
+    for _ in range(num_nodes):
+        node, value = input().strip().split(":")
+        heuristic[node] = int(value)
+
+    start = input("Enter the start node: ").strip()
+    goal = input("Enter the goal node: ").strip()
+
+    path = best_first_search(graph, start, goal, heuristic)
+    if path:
+        print("Path:", " -> ".join(path))
+    else:
+        print(f"No path found from {start} to {goal}.")
+
+if __name__ == "__main__":
+    main()
