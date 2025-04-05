@@ -1,29 +1,14 @@
-def promising(state, color, colors_of_states, neighbors):
-    for neighbor in neighbors.get(state, []):
-        if colors_of_states.get(neighbor) == color:
-            return False
-    return True
-
-def get_color_for_state(state, colors, colors_of_states, neighbors):
-    for color in colors:
-        if promising(state, color, colors_of_states, neighbors):
-            return color
-    return None  # In case no valid color is found
-
-def main():
-    colors = input("Enter colors: ").split(",")
-    states = input("Enter states: ").split(",")
-    
-    neighbors = {}
-    for state in states:
-        neighbors_input = input(f"Neighbors for {state}: ").split(",")
-        neighbors[state] = [neighbor.strip() for neighbor in neighbors_input if neighbor.strip()]
-    
-    colors_of_states = {}
-    for state in states:
-        colors_of_states[state] = get_color_for_state(state, colors, colors_of_states, neighbors)
-    
-    print(colors_of_states)
-
-if __name__ == "__main__":
-    main()
+r = set()
+def sub(i, l, k):
+    if sum(l) == k:  
+        r.add(tuple(l))
+    if i == len(nums):
+        return
+    sub(i + 1, l, k) 
+    l.append(nums[i])  
+    sub(i + 1, l, k)
+    l.pop()
+nums = list(map(int, input("Enter List: ").split()))
+k = int(input("Target sum (k): "))
+sub(0, [], k)
+print(r)
